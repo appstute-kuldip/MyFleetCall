@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "254459838379",
+    "firebase_url": "https://myfleet-clicktocall-dev.firebaseio.com",
+    "project_id": "myfleet-clicktocall-dev",
+    "storage_bucket": "myfleet-clicktocall-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254459838379:android:8bb1e220f14bceb40edcee",
+        "android_client_info": {
+          "package_name": "com.example.myfleetcall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254459838379-pe4n95ld86jbhho4jhcipvp2n3fv14ho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFtFbGBlqpQxTdw4rwaRn5IwPOl2sN7LE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254459838379-pe4n95ld86jbhho4jhcipvp2n3fv14ho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

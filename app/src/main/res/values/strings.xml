@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">MyFleetCall</string>
+    <string name="mobInfo">Tap \'Next\' to verify your phone number.</string>
+    <string name="OTPInfo">Please wait.. OTP sent on your mobile number</string>
+
+    //device_access_screen
+    <string name="sms">SMS</string>
+    <string name="sms_textinfo">To securely verify mobile number.</string>
+    <string name="phone_state">PHONE</string>
+    <string name="phone_state_info">To verify your device details.</string>
+    <string name="button_name">LET\'S START</string>
+
+    //allow_device_access_screen
+    <string name="pleasewait">Please Wait...</string>
+
+    //verifySims
+    <string name="verifymobilenumber">Verify Mobile Number</string>
+    <string name="description">We need to send an SMS from your phone to verify if your phone number is verified.</string>
+    <string name="button_next">NEXT</string>
+
+    //MobileVerified
+    <string name="mobileverified">Mobile Verified</string>
+
+</resources>
