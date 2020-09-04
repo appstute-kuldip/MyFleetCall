@@ -2,7 +2,6 @@ package com.example.myfleetcall.ReceiverObserver;
 
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 public class MyPhoneStateListener extends PhoneStateListener {
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".activity.ProfileActivity">
+    tools:context="com.example.myfleetcall.activity.ProfileActivity">
 
     <TextView
         android:layout_width="wrap_content"

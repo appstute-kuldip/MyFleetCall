@@ -4,11 +4,9 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -18,10 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.myfleetcall.R;
 import com.example.myfleetcall.ReceiverObserver.CallLogObserver;
@@ -30,9 +25,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static android.content.ContentValues.TAG;
 
@@ -61,7 +53,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        mPreference = getApplicationContext().getSharedPreferences("MyFleetCall", MODE_PRIVATE).edit();
 
         //Log.d("Msg","Noti received"+remoteMessage.getNotification().getBody());
         //generateNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle());
@@ -75,17 +66,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String title = receivedMap.get("title");
             String body = receivedMap.get("body");
             generateNotification(body, title);
+
+            //get data
+            mPreference = getApplicationContext().getSharedPreferences("MyFleetCall", MODE_PRIVATE).edit();
+            mPreference.putBoolean("FlagNoti", true);
+            mPreference.putString("NMobileNumber",body);
+            mPreference.putString("CallTo", body);
+            mPreference.apply();
+            mPreference.commit();
         }
     }
 
 
     private void generateNotification(String body, String title) {
 
-        mPreference.putBoolean("FlagNoti", true);
-        mPreference.putString("NMobileNumber",body);
-        mPreference.putString("CallTo", body);
-        mPreference.apply();
-        mPreference.commit();
+
         if (notificationManager == null) {
             notificationManager = (NotificationManager) getSystemService
                     (Context.NOTIFICATION_SERVICE);

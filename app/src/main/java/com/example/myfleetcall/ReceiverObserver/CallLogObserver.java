@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -18,7 +17,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.myfleetcall.Firebase.MyFirebaseMessagingService;
 import com.example.myfleetcall.activity.HomeActivity;
-import com.example.myfleetcall.activity.MobileNumberActivity;
 import com.example.myfleetcall.services.ApiClient;
 import com.example.myfleetcall.services.CallDetailsRequest;
 import com.example.myfleetcall.services.CallDetailsResponse;

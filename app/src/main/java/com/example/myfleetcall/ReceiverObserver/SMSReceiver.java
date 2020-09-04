@@ -1,7 +1,6 @@
 package com.example.myfleetcall.ReceiverObserver;
 
 import android.Manifest;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,13 +8,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.ProgressBar;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -41,34 +39,32 @@ public class SMSReceiver extends BroadcastReceiver {
 
     public static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
     public static final String TAG = "SmsBroadCastReceiver";
-    String msg,phone = "";
+    String msg, phone = "";
     MobileNumberActivity mobileNumberActivity;
     MyFirebaseMessagingService mFMS;
     private SharedPreferences.Editor mPreference;
-    public static String simID,deviceID,deviceID_2;
-
-
+    public static String simID, deviceID, deviceID_2;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         mPreference = context.getSharedPreferences("MyFleetCall", MODE_PRIVATE).edit();
-        Log.i(TAG,"Intent received"+intent.getAction());
+        Log.i(TAG, "Intent received" + intent.getAction());
 
         if (intent.getAction() == SMS_RECEIVED) {
 
             Bundle dataBundle = intent.getExtras();
-            if (dataBundle != null){
-                Object[] mypdu = (Object[])dataBundle.get("pdus");
+            if (dataBundle != null) {
+                Object[] mypdu = (Object[]) dataBundle.get("pdus");
                 final SmsMessage[] messages = new SmsMessage[mypdu.length];
 
-                for (int i = 0 ; i<mypdu.length; i++) {
+                for (int i = 0; i < mypdu.length; i++) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         String format = dataBundle.getString("format");
-                        messages[i] = SmsMessage.createFromPdu((byte[])mypdu[i],format);
+                        messages[i] = SmsMessage.createFromPdu((byte[]) mypdu[i], format);
                     } else {
-                        messages[i] = SmsMessage.createFromPdu((byte[])mypdu[i]);
+                        messages[i] = SmsMessage.createFromPdu((byte[]) mypdu[i]);
                     }
 
 
@@ -80,11 +76,20 @@ public class SMSReceiver extends BroadcastReceiver {
                 //boolean res = reqMsg.equals(phone);
                 //System.out.println("res"+res+"phone:"+phone);
 //                String decData = getDecryptData(msg);
-//                System.out.println("dec data:"+decData);
-                if (msg.equals("Registration successful. Welcome to MyFleetCall.")) {
+                System.out.println("msg data:" + msg.length());
+
+//                System.out.println("match:"+MatchSMSString);
+//                System.out.println("k:"+MobileNumberActivity.keyData);
+                //getDecryptData(msg,MobileNumberActivity.keyData,MobileNumberActivity.ivData);
+                if (msg.length() == 69) {//msg.equals("Registration successful. Welcome to MyFleetCall.")
                     //mobileNumberActivity.disableProgressBar();
                     //Toast.makeText(context,"Message :"+msg+" \nPhone:"+phone,Toast.LENGTH_SHORT).show();
-                    getSimSlot(context,intent);
+                    String MatchSMSString = msg.substring(0, 48);
+                    if (MatchSMSString.equals("Registration successful. Welcome to MyFleetCall.")) {
+                        MobileNumberActivity.mProgressBar.setVisibility(View.GONE);
+                        getSimSlot(context, intent);
+                    }
+
                 }
             }
         }
@@ -92,48 +97,39 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
 
-    private String getDecryptData(String decString) {
-        String OrigString = "";
-
-        for (char c : decString.toCharArray()) {
-            int OrigVal = (int) c;
-            OrigVal = OrigVal -3;
-
-            char ConvString = (char) OrigVal;
-            OrigString += ConvString;
-
-        }
-
-        System.out.println("dec data:"+OrigString);
-        return OrigString;
-    }
-
-    public void getSimSlot(Context context,Intent intent){
+    public void getSimSlot(Context context, Intent intent) {
         try {
             Bundle bundle = intent.getExtras();
             int slot = -1;
             if (bundle != null) {
                 Set<String> keySet = bundle.keySet();
-                for(String key:keySet){
-                    switch (key){
-                        case "slot":slot = bundle.getInt("slot", -1);
+                for (String key : keySet) {
+                    switch (key) {
+                        case "slot":
+                            slot = bundle.getInt("slot", -1);
                             break;
-                        case "simId":slot = bundle.getInt("simId", -1);
+                        case "simId":
+                            slot = bundle.getInt("simId", -1);
                             break;
-                        case "simSlot":slot = bundle.getInt("simSlot", -1);
+                        case "simSlot":
+                            slot = bundle.getInt("simSlot", -1);
                             break;
-                        case "slot_id":slot = bundle.getInt("slot_id", -1);
+                        case "slot_id":
+                            slot = bundle.getInt("slot_id", -1);
                             break;
-                        case "simnum":slot = bundle.getInt("simnum", -1);
+                        case "simnum":
+                            slot = bundle.getInt("simnum", -1);
                             break;
-                        case "slotId":slot = bundle.getInt("slotId", -1);
+                        case "slotId":
+                            slot = bundle.getInt("slotId", -1);
                             break;
-                        case "slotIdx":slot = bundle.getInt("slotIdx", -1);
+                        case "slotIdx":
+                            slot = bundle.getInt("slotIdx", -1);
                             break;
                         default:
-                            if(key.toLowerCase().contains("slot")|key.toLowerCase().contains("sim")){
+                            if (key.toLowerCase().contains("slot") | key.toLowerCase().contains("sim")) {
                                 String value = bundle.getString(key, "-1");
-                                if(value.equals("0")|value.equals("1")|value.equals("2")){
+                                if (value.equals("0") | value.equals("1") | value.equals("2")) {
                                     slot = bundle.getInt(key, -1);
                                 }
                             }
@@ -142,7 +138,7 @@ public class SMSReceiver extends BroadcastReceiver {
                     }
                 }
 
-                Log.d("slot", "slot=>"+slot);
+                Log.d("slot", "slot=>" + slot);
 //                if (slot == 0) {
 //                    Toast.makeText(context, "SIM - 1 j", Toast.LENGTH_SHORT).show();
 //                } else {
@@ -150,17 +146,16 @@ public class SMSReceiver extends BroadcastReceiver {
 //                }
                 //getSimDetails(context,slot);
                 //mobileNumberActivity.getSimDetails(slot);
-                getSimDetails(context,slot);
-                saveUser(createRequest(),context);
+                getSimDetails(context, slot);
+                saveUser(createRequest(), context);
 
             }
 
-        }catch (Exception e){
-            Log.d(TAG, "Exception=>"+e);
+        } catch (Exception e) {
+            Log.d(TAG, "Exception=>" + e);
         }
 
     }
-
 
 
     public UserRequest createRequest() {
@@ -183,33 +178,33 @@ public class SMSReceiver extends BroadcastReceiver {
 
                 if (response.isSuccessful()) {
 
-                        if (response.body().getMessage().equals("Success")) {
+                    if (response.body().getMessage().equals("Success")) {
 
-                            Toast.makeText(context, "Registered successfully.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Registered successfully.", Toast.LENGTH_SHORT).show();
 
-                            mPreference.putString("simID", simID);
-                            mPreference.putString("deviceID",deviceID);
-                            mPreference.putString("deviceID_2",deviceID_2);
-                            mPreference.putString("mobileNumber",mobileNumberActivity.mobileNumber);
-                            mPreference.putString("id",response.body().getId());
-                            mPreference.apply();
-                            mPreference.commit();
-                            SharedPreferences prefs = context.getSharedPreferences("MyFleetCall", MODE_PRIVATE);
-                            System.out.println("mob:"+prefs.getString("deviceID","no value"));
-                            navigateToMobileVerifiedActivity(context);
-                        } else {
+                        mPreference.putString("simID", simID);
+                        mPreference.putString("deviceID", deviceID);
+                        mPreference.putString("deviceID_2", deviceID_2);
+                        mPreference.putString("mobileNumber", mobileNumberActivity.mobileNumber);
+                        mPreference.putString("id", response.body().getId());
+                        mPreference.apply();
+                        mPreference.commit();
+                        SharedPreferences prefs = context.getSharedPreferences("MyFleetCall", MODE_PRIVATE);
+                        System.out.println("mob:" + prefs.getString("deviceID", "no value"));
+                        navigateToMobileVerifiedActivity(context);
+                    } else {
 
-                            Toast.makeText(context, "Welcome back to MyFleetCall.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Welcome back to MyFleetCall.", Toast.LENGTH_SHORT).show();
 
-                            mPreference.putString("simID", simID);
-                            mPreference.putString("deviceID",deviceID);
-                            mPreference.putString("deviceID_2",deviceID_2);
-                            mPreference.putString("mobileNumber",mobileNumberActivity.mobileNumber);
-                            mPreference.putString("id",response.body().getId());
-                            mPreference.apply();
-                            mPreference.commit();
-                            navigateToHomeActivity(context);
-                        }
+                        mPreference.putString("simID", simID);
+                        mPreference.putString("deviceID", deviceID);
+                        mPreference.putString("deviceID_2", deviceID_2);
+                        mPreference.putString("mobileNumber", mobileNumberActivity.mobileNumber);
+                        mPreference.putString("id", response.body().getId());
+                        mPreference.apply();
+                        mPreference.commit();
+                        navigateToHomeActivity(context);
+                    }
 
                 } else {
                     Toast.makeText(context, "Request failed.", Toast.LENGTH_SHORT).show();
@@ -240,9 +235,9 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
 
-    public void getSimDetails(Context context,int slot) {
+    public void getSimDetails(Context context, int slot) {
 
-        System.out.println("Slot inside rec:"+slot);
+        System.out.println("Slot inside rec:" + slot);
         if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;

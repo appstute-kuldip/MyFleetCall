@@ -7,20 +7,15 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.NotificationChannel;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.myfleetcall.Firebase.CallMobile;
-import com.example.myfleetcall.Firebase.MyFirebaseMessagingService;
+
 import com.example.myfleetcall.R;
 import com.firebase.client.Firebase;
 
@@ -61,6 +56,7 @@ public class HomeActivity extends AppCompatActivity {
         System.out.println("mob:" + prefs.getString("mobileNumber", "no value"));
         boolean FlagNoti = prefs.getBoolean("FlagNoti", false);
         NMobileNumber = prefs.getString("NMobileNumber",null);
+        System.out.println("updated 1:" + prefs.getBoolean("FlagNoti", false));
 
 
         if (FlagNoti) {
@@ -68,10 +64,12 @@ public class HomeActivity extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), "Call", Toast.LENGTH_SHORT).show();
             //navigateToMakeACall();
             //makeACall();
-            showAlertDialog("You have a new Call request : " , NMobileNumber);
+            showAlertDialog("You have a new call request from : " , NMobileNumber);
             mPreference.putBoolean("FlagNoti", false);
             mPreference.apply();
             mPreference.commit();
+
+            System.out.println("updated:" + prefs.getBoolean("FlagNoti", false));
 
         }
 

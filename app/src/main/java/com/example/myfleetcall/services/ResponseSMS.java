@@ -1,13 +1,10 @@
 package com.example.myfleetcall.services;
 
-import java.lang.reflect.Array;
-
 public class ResponseSMS {
-
 
     private String message;
     private String key;
-    //private Array data[];
+    private String iv;
 
 
     public String getMessage() {
@@ -24,5 +21,13 @@ public class ResponseSMS {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getIv() {
+        return iv;
+    }
+
+    public void setIv(String iv) {
+        this.iv = iv;
     }
 }

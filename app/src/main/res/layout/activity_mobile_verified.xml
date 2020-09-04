@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/mobileverfiedScreen"
-    tools:context=".activity.MobileVerifiedActivity">
+    tools:context="com.example.myfleetcall.activity.MobileVerifiedActivity">
 
     <TextView
         android:id="@+id/mobileverfiedText"

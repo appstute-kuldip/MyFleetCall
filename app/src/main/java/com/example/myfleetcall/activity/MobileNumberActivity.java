@@ -7,10 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -23,7 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.myfleetcall.R;
-import com.example.myfleetcall.ReceiverObserver.SMSReceiver;
+
 import com.example.myfleetcall.services.ApiClientSMS;
 import com.example.myfleetcall.services.RequestSMS;
 import com.example.myfleetcall.services.ResponseSMS;
@@ -34,16 +31,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.myfleetcall.ReceiverObserver.SimChangedReceiver.RECEIVE_SMS_PERMISSION;
-
 public class MobileNumberActivity extends AppCompatActivity {
 
     private EditText eMNumber;
     private Button btnNext;
     private String mNumber = "";
-    private ProgressBar mProgressBar;
-    public static String simID,deviceID,deviceID_2,mobileNumber = "";
+    public static ProgressBar mProgressBar;
+    public static String simID, deviceID, deviceID_2, mobileNumber = "";
     public static final int RECEIVE_SMS_PERMISSION = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +51,14 @@ public class MobileNumberActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressbar);
 
 
-
         //getPermission();
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.RECEIVE_SMS) !=
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.RECEIVE_SMS)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECEIVE_SMS)) {
 
-            } else  {
-                ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECEIVE_SMS},
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS},
                         RECEIVE_SMS_PERMISSION);
             }
         }
@@ -74,10 +69,11 @@ public class MobileNumberActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //getSMSFromApi(createRequestSMS("9890023065"));
+                btnNext.setEnabled(false);
                 mNumber = eMNumber.getText().toString();
                 mobileNumber = eMNumber.getText().toString();
-                Log.d("mNumber",mNumber);
-                System.out.println("mn:"+mNumber);
+                Log.d("mNumber", mNumber);
+                System.out.println("mn:" + mNumber);
                 if (mNumber.isEmpty() || mNumber.length() < 10) {
                     eMNumber.setError("Enter a valid mobile number");
                     eMNumber.requestFocus();
@@ -107,15 +103,17 @@ public class MobileNumberActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseSMS> call, Response<ResponseSMS> response) {
 
                 if (response.isSuccessful()) {
-                    Log.e("success", response.body().getMessage() );
+                    Log.e("success", response.body().getMessage());
                     if (response.body().getMessage().equals("Number not whitelisted")) {
                         //Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         //Toast.makeText(getApplicationContext(), "Number is not whitelisted", Toast.LENGTH_SHORT).show();
                         showAlertDialog("You are not authorized to register.");
+                        btnNext.setEnabled(true);
                         mProgressBar.setVisibility(View.GONE);
                     } else {
                         //Toast.makeText(getApplicationContext(), "Number is whitelisted", Toast.LENGTH_SHORT).show();
-                        mProgressBar.setVisibility(View.GONE);
+
+
                     }
                 }
 //
@@ -132,8 +130,8 @@ public class MobileNumberActivity extends AppCompatActivity {
         });
     }
 
-    private void showAlertDialog(String stringToShow){
-        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+    private void showAlertDialog(String stringToShow) {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
         dlgAlert.setMessage(stringToShow);
         dlgAlert.setTitle("MyFleetCall");
         dlgAlert.setPositiveButton("OK", null);
@@ -144,7 +142,7 @@ public class MobileNumberActivity extends AppCompatActivity {
 
     public void getSimDetails(int slot) {
 
-        System.out.println("Slot inside:"+slot);
+        System.out.println("Slot inside:" + slot);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -156,7 +154,7 @@ public class MobileNumberActivity extends AppCompatActivity {
         final List<SubscriptionInfo> subsInfoList = subscriptionManager.getActiveSubscriptionInfoList();
 
         if (subsInfoList == null) {
-            Toast.makeText(this,"No SIM card detected..",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No SIM card detected..", Toast.LENGTH_SHORT).show();
             eMNumber.setEnabled(false);
             btnNext.setEnabled(false);
         } else {
@@ -189,11 +187,7 @@ public class MobileNumberActivity extends AppCompatActivity {
         }
     }
 
-    public void disableProgressBar() {
-        mProgressBar = findViewById(R.id.progressbar);
-        mProgressBar.setVisibility(View.GONE);
 
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -201,10 +195,10 @@ public class MobileNumberActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case RECEIVE_SMS_PERMISSION:
-                if (grantResults.length >0  && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(getApplicationContext(),"thanks..",Toast.LENGTH_SHORT).show();
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "thanks..", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(),"Permission Not Granted..",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Permission Not Granted..", Toast.LENGTH_SHORT).show();
 
                 }
         }

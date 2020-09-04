@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="bottom|center"
     android:orientation="vertical"
-    tools:context=".activity.AllowDeviceAccessActivity">
+    tools:context="com.example.myfleetcall.activity.AllowDeviceAccessActivity">
 
 
 

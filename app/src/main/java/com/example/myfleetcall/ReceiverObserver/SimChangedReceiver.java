@@ -1,28 +1,12 @@
 package com.example.myfleetcall.ReceiverObserver;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.telephony.SmsMessage;
-import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
-import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.myfleetcall.activity.AllowDeviceAccessActivity;
 import com.example.myfleetcall.activity.MobileNumberActivity;
-import com.example.myfleetcall.activity.VerifySimWithMobileNoActivity;
-
-import java.util.List;
-import java.util.Set;
 
 public class SimChangedReceiver extends BroadcastReceiver {
 
